@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        imagePullPolicy: IfNotPresent
+        #resources: {}
+        #volumeMounts: 
+        #- name: test1
+        #  mountPath: /tmp/test1
+        #volumes: 
+        #- name: test1
+        #emptyDir: {}

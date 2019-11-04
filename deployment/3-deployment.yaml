@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-mount-hostpath
+  labels:
+    app: webhook-mount-hostpath
+  #namespace: ${namespace}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook-mount-hostpath
+  template:
+    metadata:
+      labels:
+        app: webhook-mount-hostpath
+    spec:
+      containers:
+      - name: webhook-mount-hostpath
+        image: regdev.99bill.com/yhf/mount-hostpath:v1.1
+        imagePullPolicy: Always
+        env:
+        - name: volumeName
+          value: "log"
+        - name: volumePath
+          value: "/opt/log"
+        - name: mountPath
+          value: "/opt/oracle/log"
+        args:
+        - -tlsCertFile=/etc/webhook/certs/cert.pem
+        - -tlsKeyFile=/etc/webhook/certs/key.pem
+        - -alsologtostderr
+        - -v=4
+        - 2>&1
+        volumeMounts:
+        - name: webhook-certs
+          mountPath: /etc/webhook/certs
+          readOnly: true
+      volumes:
+      - name: webhook-certs
+        secret:
+        secretName: mount-hostpath-certs

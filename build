@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#: ${DOCKER_USER:? required}
+
+#dep ensure -v
+#CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o admission-webhook-example 
+
+name=$(basename $(pwd))
+repo="regdev.99bill.com"
+
+go build -o $name
+sudo docker build --no-cache -t $repo/yhf/$name:${1:-v1} .
+rm -rf $name
+
+sudo docker push $repo/yhf/$name:${1:-v1}
